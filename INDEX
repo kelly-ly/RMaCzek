@@ -1,0 +1,16 @@
+RMaCzek                 RMaCzek: A package that can produce
+                        Czekanowski's diagram
+Um_factor               Calculate the Um factor
+czek_matrix             Preprocess data to produce a Czekanowski's
+                        Diagram.
+internet_availability   Distances between Internet availability in some
+                        counties of the Silesia Voivodeship, Poland
+manual_reorder          Manually reorder Czekanowski's Diagram
+plot.czek_matrix        Produce a Czekanowski's Diagram
+print.czek_matrix       Print a Czekanowski's Diagram
+print.czek_matrix_dist
+                        Print a Czekanowski's Diagram
+seals_similarities      Similarities between Akkadian cylinder seals
+                        depicting the Serpent God
+skulls_distances        Distances between archaic human skulls
+urns                    Measurements of urns from cremation graves
