@@ -7,7 +7,7 @@ basic_cluster = function(plot_values, num_cluster = 3, num_obs){
     diff = abs(diff(plot_values[(i*num_obs+1):((i+1)*num_obs)]))
     ordered = order(diff, decreasing = TRUE)
 
-    score = 4
+    score = num_cluster
     foo = diff[ordered[1]]
     for (j in ordered) {
       if(score == 0 || diff[j] == 0){
