@@ -1,0 +1,77 @@
+#'@title Calculate the Czekanowski’s matrix of the clustering results.
+#'@param x A data set or a matrix with class czek_matrix.
+#'@param y If x is the data set, y is the cluster label.
+#'@param distfun Specifies which distance function should be used.
+#'@param dist_method Four linkage criteria: single, complete, average and SSD.
+#'
+#'@return A distance matrix.
+#'
+#'
+cluster_dist = function(x, y, distfun = dist, dist_method = "average"){
+  if(class(x) == "czek_matrix"){
+    if(is.null(attr(x, "cluster"))){
+      stop("Please try a clustered czek_matrix.")
+    }
+
+    dist_mat = x
+    num_cluster = attr(x, "num_cluster")
+    y = attr(x, "cluster_res")
+
+    clusters = list()
+    for (i in 1:num_cluster) {
+      clusters[[i]] = which(y == i)
+    }
+    names = paste("cluster", 1:num_cluster)
+  }else if(class(x) == "matrix" | class(x) == "data.frame"){
+    if(nrow(x) != length(y)){
+      stop("The lengths of x and y do not match.")
+    }
+    dist_mat = as.matrix(do.call(distfun, list(x)))
+    names = unique(y)
+    num_cluster = length(names)
+
+    clusters = list()
+    for (i in names) {
+      clusters[[i]] = which(y == i)
+    }
+  }
+
+  if(num_cluster <= 2){
+    warning("The results would not be plotted by Czekanowski's diagram because the number of clusters is less than 3.")
+  }
+
+  cluster_dist = matrix(NA, nrow = num_cluster, ncol = num_cluster)
+  for (i in 1:num_cluster) {
+    for (j in 1:num_cluster) {
+      if(i == j){
+        cluster_dist[i,j] = 0
+      }else{
+        if(dist_method == "single"){
+          # Single linkage algorithm
+          cluster_dist[i,j] = min(dist_mat[clusters[[i]], clusters[[j]]])
+        }else if(dist_method == "complete"){
+          # Complete linkage algorithm
+          cluster_dist[i,j] = max(dist_mat[clusters[[i]], clusters[[j]]])
+        }else if(dist_method == "average"){
+          # Average linkage algorithm
+          cluster_dist[i,j] = sum(dist_mat[clusters[[i]], clusters[[j]]])/(length(clusters[[i]]) * length(clusters[[j]]))
+        }else if(dist_method == "SSD"){
+          # Sum of squares of deviations
+          cluster_dist[i,j] = sum(dist_mat[clusters[[i]], clusters[[j]]]^2)/(length(clusters[[i]]) * length(clusters[[j]]))
+        }else stop("Cluster distance method is not correct.")
+      }
+    }
+  }
+
+  dimnames(cluster_dist) = list(names, names)
+  return(cluster_dist)
+}
+
+
+
+
+
+
+
+
+
