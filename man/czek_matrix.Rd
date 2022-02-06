@@ -27,19 +27,19 @@ czek_matrix(
 )
 }
 \arguments{
-\item{x}{a numeric matrix, data frame or a 'dist' object.}
+\item{x}{A numeric matrix, data frame or a 'dist' object.}
 
-\item{order}{specifies which seriation method should be applied. The standard setting is the seriation method OLO. If NA or NULL, then no seriation is done and the original ordering is saved.  The user may provide their own ordering, through a number vector of indices. Also in this case no rearrangement will be done.}
+\item{order}{Specifies which seriation method should be applied. The standard setting is the seriation method OLO. If NA or NULL, then no seriation is done and the original ordering is saved.  The user may provide their own ordering, through a number vector of indices. Also in this case no rearrangement will be done.}
 
-\item{n_classes}{specifies how many classes the distances should be divided into. The standard setting is 5 classes.}
+\item{n_classes}{Specifies how many classes the distances should be divided into. The standard setting is 5 classes.}
 
-\item{interval_breaks}{specifies the partition boundaries for the distances. As a standard setting, each class represents an equal amount of distances. If the interval, breaks are positive and sum up to 1, then it is assumed that they specify percentages of the distances in each interval. Otherwise if provided as a numeric vector not summing up to 1, they specify the exact boundaries for the symbols representing distance groups.}
+\item{interval_breaks}{Specifies the partition boundaries for the distances. As a standard setting, each class represents an equal amount of distances. If the interval, breaks are positive and sum up to 1, then it is assumed that they specify percentages of the distances in each interval. Otherwise if provided as a numeric vector not summing up to 1, they specify the exact boundaries for the symbols representing distance groups.}
 
-\item{monitor}{specifies if the distribution of the distances should be visualized. The standard setting is that the distribution will not be visualized. TRUE and "cumulativ_plot" is available.}
+\item{monitor}{Specifies if the distribution of the distances should be visualized. The standard setting is that the distribution will not be visualized. TRUE and "cumulativ_plot" is available.}
 
-\item{distfun}{specifies which distance function should be used. Standard setting is the dist function which uses the Euclidean distance. The first argument of the function has to be the matrix or data frame containing the data.}
+\item{distfun}{Specifies which distance function should be used. Standard setting is the dist function which uses the Euclidean distance. The first argument of the function has to be the matrix or data frame containing the data.}
 
-\item{scale_data}{specifies if the data set should be scaled. The standard setting is that the data will be scaled.}
+\item{scale_data}{Specifies if the data set should be scaled. The standard setting is that the data will be scaled.}
 
 \item{focal_obj}{Numbers or names of objects (rows if x is a dataset and not 'dist' object) that are not to take part in the reordering procedure. These observations will be placed as last rows and columns of the output matrix. See Details.}
 
@@ -49,13 +49,13 @@ czek_matrix(
 
 \item{column_order_stat_grouping}{If original_diagram is TRUE, then here one can pass the partition boundaries for the ranking in each column.}
 
-\item{dist_args}{specifies further parameters that can be passed on to the distance function.}
+\item{dist_args}{Specifies further parameters that can be passed on to the distance function.}
 
 \item{cluster}{If TRUE, Czekanowski’s clustering is performed.}
 
-\item{cluster_type}{pecifies the cluster type and it can be ’exact’ or ’fuzzy’.}
+\item{cluster_type}{Pecifies the cluster type and it can be ’exact’ or ’fuzzy’.}
 
-\item{num_cluster}{pecifies the number of clusters.}
+\item{num_cluster}{Pecifies the number of clusters.}
 
 \item{sig.lvl}{The threshold that decides the significance of change point}
 
@@ -63,11 +63,92 @@ czek_matrix(
 
 \item{min.size}{Minimum number of observations between change points.}
 
-\item{...}{specifies further parameters that can be passed on to the seriate function in the seriation package.}
+\item{...}{Specifies further parameters that can be passed on to the seriate function in the seriation package.}
 }
 \value{
-The function returns a matrix with class czek_matrix. The return from the function is expected to be passed to the plot function. If as_dist is passed as TRUE, then a czek_matrix_dist object is returned and this is not suitable for the plotting. As an attribute of the output the optimized criterion value is returned. However, this is a guess based on seriation::seriate()'s and seriation::criterion()'s manuals. If something else was optimized, e.g. due to user's parameters, then this will be wrong. If unable to guess, then NA saved in the attribute.
+The function returns a matrix with class czek_matrix. The return from the function is expected to be passed to the plot function. If as_dist is passed as TRUE, then a czek_matrix object is returned and this is not suitable for the plotting. As an attribute of the output the optimized criterion value is returned. However, this is a guess based on seriation::seriate()'s and seriation::criterion()'s manuals. If something else was optimized, e.g. due to user's parameters, then this will be wrong. If unable to guess, then NA saved in the attribute.
 }
 \description{
-Preprocess data to produce Czekanowski's Diagram.
+Preprocess the data to generate a matrix of category czek_matrix for generating Czekanowski's Diagram. This method also offers exact and fuzzy Czekanowski's clustering algorithm.
+}
+\examples{
+# NOT RUN {
+# Set data ####
+x<-mtcars
+
+# Different type of input that give same result ############
+czek_matrix(x)
+czek_matrix(stats::dist(scale(x)))
+
+## below a number of other options are shown
+## but they take too long to run
+# }
+# NOT RUN {
+# Change seriation method ############
+#seriation::show_seriation_methods("dist")
+czek_matrix(x,order = "GW")
+czek_matrix(x,order = "ga")
+czek_matrix(x,order = sample(1:nrow(x)))
+
+# Change number of classes ############
+czek_matrix(x,n_classes = 3)
+
+# Change the partition boundaries ############
+czek_matrix(x,interval_breaks = c(0.1,0.4,0.5)) #10\%, 40\% and 50\%
+czek_matrix(x,interval_breaks = c(0,1,4,6,8.48)) #[0,1] (1,4] (4,6] (6,8.48]
+czek_matrix(x,interval_breaks = "equal_width_between_classes") #[0,1.7] (1.7,3.39]  (3.39,5.09] (5.09,6.78] (6.78,8.48]
+
+# Change number of classes ############
+czek_matrix(x,monitor = TRUE)
+czek_matrix(x,monitor = "cumulativ_plot")
+
+# Change distance function ############
+czek_matrix(x,distfun = function(x) stats::dist(x,method = "manhattan"))
+
+# Change dont scale the data ############
+czek_matrix(x,scale_data = FALSE)
+czek_matrix(stats::dist(x))
+
+# Change additional settings to the seriation method ############
+czek_matrix(x,order="ga",control=list(popSize=200, suggestions=c("SPIN_STS","QAP_2SUM")))
+
+# Create matrix as originally described by Czekanowski (1909), with each column
+# assigned levels according to how the order statistics of the  distances in it
+# are grouped. The grouping below is the one used by Czekanowski (1909).
+czek_matrix(x,original_diagram=TRUE,column_order_stat_grouping=c(3,4,5,6))
+
+# Create matrix with two focal object that will not influence seriation
+czek_matrix(x,focal_obj=c("Merc 280","Merc 450SL"))
+# Same results but with object indices
+czek_res<-czek_matrix(x,focal_obj=c(10,13))
+
+# we now place the two objects in a new place
+czek_res_neworder<-manual_reorder(czek_res,c(1:10,31,11:20,32,21:30), orig_data=x)
+
+# the same can be alternatively done by hand
+attr(czek_res,"order")<-attr(czek_res,"order")[c(1:10,31,11:20,32,21:30)]
+# and then correct the values of the different criteria so that they
+# are consistent with the new ordering
+attr(czek_res,"Path_length")<-seriation::criterion(stats::dist(scale(x)), order=seriation::ser_permutation(attr(czek_res, "order")),method="Path_length")
+# Here we need to know what criterion was used for the seriation procedure
+# If the seriation package was used, then see the manual for seriation::seriate()
+# seriation::criterion().
+# If the genetic algorithm shipped with RMaCzek was used, then it was the Um factor.
+attr(czek_res,"criterion_value")<-seriation::criterion(stats::dist(scale(x)), order=seriation::ser_permutation(attr(czek_res, "order")),method="Path_length")
+attr(czek_res,"Um")<-RMaCzek::Um_factor(stats::dist(scale(x)), order= attr(czek_res, "order"),inverse_um=FALSE)
+
+# Czekanowski's Clusterings ############
+# Exact Clustering
+czek_exact = czek_matrix(x, order = "GW", cluster = TRUE, num_cluster = 2, min.size = 2)
+plot(czek_exact)
+attr(czek_exact, "cluster_type") # To get the clustering type.
+attr(czek_exact, "cluster_res") # To get the clustering suggestion.
+
+# Fuzzy Clustering
+czek_fuzzy = czek_matrix(x, order = "OLO", cluster = TRUE, num_cluster = 2, cluster_type = "fuzzy", min.size = 2, scale_bandwidth = 0.2)
+plot(czek_fuzzy)
+attr(czek_fuzzy, "cluster_type") # To get the clustering type.
+attr(czek_fuzzy, "cluster_res") # To get the clustering suggestion.
+# }
+
 }

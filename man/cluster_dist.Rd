@@ -2,7 +2,7 @@
 % Please edit documentation in R/cluster_distance.R
 \name{cluster_dist}
 \alias{cluster_dist}
-\title{Calculate the Czekanowski’s matrix of the clustering results.}
+\title{Calculate the distance matrix between clusters.}
 \usage{
 cluster_dist(x, y, distfun = dist, dist_method = "average")
 }
@@ -19,5 +19,16 @@ cluster_dist(x, y, distfun = dist, dist_method = "average")
 A distance matrix.
 }
 \description{
-Calculate the Czekanowski’s matrix of the clustering results.
+Calculate the distance matrix for a czek_matrix with clustering result or a data set with its clustering labels.
+}
+\examples{
+# Clustering Result on czek_matrix
+x = czek_matrix(iris[,-5], cluster = TRUE, num_cluster = 3)
+dist_czek = cluster_dist(x)
+plot(czek_matrix(dist_czek))
+
+# Clustering Result on a Data Set with Clustering Labels
+dist_data = cluster_dist(x = iris[,-5], y = iris$Species)
+plot(czek_matrix(dist_data))
+
 }

@@ -15,7 +15,7 @@
   pal = brewer.pal(n = 8, name = "Dark2"),
   alpha = 0.3,
   ps_power = 0.6,
-  col_size = 0.8,
+  col_size = 1,
   cex.main = 1,
   ...
 )
@@ -48,32 +48,43 @@
 \item{...}{specifies further parameters that can be passed on to the plot function.}
 }
 \description{
-This is a function that can produce a Czekanowski's Diagram.
+This is a function that can produce a Czekanowski's Diagram and present clustering findings.
 }
 \examples{
 # Set data ####
-x<-czek_matrix(mtcars)
-
+# Not Cluster
+czek = czek_matrix(mtcars)
+# Exact Clustering
+czek_exact = czek_matrix(x, order = "GW", cluster = TRUE, num_cluster = 2, min.size = 2)
+# Fuzzy Clustering
+czek_fuzzy = czek_matrix(x, order = "OLO", cluster = TRUE, num_cluster = 2, cluster_type = "fuzzy", min.size = 2, scale_bandwidth = 0.2)
 
 # Standard plot ############
-plot(x)
-plot.czek_matrix(x)
+plot(czek_exact)
+plot.czek_matrix(czek_fuzzy)
 
+# Edit diagram title
+plot(czek, plot_title = "mtcars", cex.main = 2)
 
-# Specify values ############
-plot(x,values=c(1.5,1,0.75,0.25,0 ))
-plot(x,values=grDevices::colorRampPalette(c("black","red","white"))(5))
+# Change point size ############
+# Specify values
+plot(czek, values = c(1, 0.8, 0.5, 0.2, 0))
+plot(czek, values = grDevices::colorRampPalette(c("black", "red", "white"))(5))
 
+# set point size for 'symbols' type by setting power value
+plot(czek, type = "symbols", ps_power = 1)
+
+# set point size for 'col' type
+plot(czek, type = "col", col_size = 0.6)
 
 # Specify type ############
-plot(x,type = "symbols")
-plot(x,type = "col")
+plot(czek, type = "symbols")
+plot(czek, type = "col")
 
+# Edit cluster ############
+# Edit colors
+plot(czek_exact, pal = c("red", "blue"))
+# Edit opacity
+plot(czek_exact, alpha = 0.5)
 
-# Specify the main title ############
-plot(x,plot_title = "Czekanowski's Diagram of mtcars")
-
-
-# Change additional settings to the plot function ############
-plot(x,col.main="blue",font.main=9,cex.main=2)
 }

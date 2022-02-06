@@ -1,11 +1,22 @@
-#'@title Calculate the Czekanowski’s matrix of the clustering results.
-#'@param x A data set or a matrix with class czek_matrix.
-#'@param y If x is the data set, y is the cluster label.
-#'@param distfun Specifies which distance function should be used.
-#'@param dist_method Four linkage criteria: single, complete, average and SSD.
+#' @title Calculate the distance matrix between clusters.
+#' @description Calculate the distance matrix for a czek_matrix with clustering result or a data set with its clustering labels.
+#' @param x A data set or a matrix with class czek_matrix.
+#' @param y If x is the data set, y is the cluster label.
+#' @param distfun Specifies which distance function should be used.
+#' @param dist_method Four linkage criteria: single, complete, average and SSD.
 #'
-#'@return A distance matrix.
+#' @return A distance matrix.
+#' @export
 #'
+#' @examples
+#' # Clustering Result on czek_matrix
+#' x = czek_matrix(iris[,-5], cluster = TRUE, num_cluster = 3)
+#' dist_czek = cluster_dist(x)
+#' plot(czek_matrix(dist_czek))
+#'
+#' # Clustering Result on a Data Set with Clustering Labels
+#' dist_data = cluster_dist(x = iris[,-5], y = iris$Species)
+#' plot(czek_matrix(dist_data))
 #'
 cluster_dist = function(x, y, distfun = dist, dist_method = "average"){
   if(class(x) == "czek_matrix"){
