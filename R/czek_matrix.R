@@ -44,9 +44,14 @@
 #' czek_matrix(x,n_classes = 3)
 #'
 #' # Change the partition boundaries ############
-#' czek_matrix(x,interval_breaks = c(0.1,0.4,0.5)) #10%, 40% and 50%
-#' czek_matrix(x,interval_breaks = c(0,1,4,6,8.48)) #[0,1] (1,4] (4,6] (6,8.48]
-#' czek_matrix(x,interval_breaks = "equal_width_between_classes") #[0,1.7] (1.7,3.39]  (3.39,5.09] (5.09,6.78] (6.78,8.48]
+#' #10%, 40% and 50%
+#' czek_matrix(x,interval_breaks = c(0.1,0.4,0.5))
+#'
+#' #[0,1] (1,4] (4,6] (6,8.48]
+#' czek_matrix(x,interval_breaks = c(0,1,4,6,8.48))
+#'
+#' #[0,1.7] (1.7,3.39]  (3.39,5.09] (5.09,6.78] (6.78,8.48]
+#' czek_matrix(x,interval_breaks = "equal_width_between_classes")
 #'
 #' # Change number of classes ############
 #' czek_matrix(x,monitor = TRUE)
@@ -79,13 +84,19 @@
 #' attr(czek_res,"order")<-attr(czek_res,"order")[c(1:10,31,11:20,32,21:30)]
 #' # and then correct the values of the different criteria so that they
 #' # are consistent with the new ordering
-#' attr(czek_res,"Path_length")<-seriation::criterion(stats::dist(scale(x)), order=seriation::ser_permutation(attr(czek_res, "order")),method="Path_length")
+#' attr(czek_res,"Path_length")<-seriation::criterion(stats::dist(scale(x)),
+#' order=seriation::ser_permutation(attr(czek_res, "order")),
+#' method="Path_length")
 #' # Here we need to know what criterion was used for the seriation procedure
 #' # If the seriation package was used, then see the manual for seriation::seriate()
 #' # seriation::criterion().
 #' # If the genetic algorithm shipped with RMaCzek was used, then it was the Um factor.
-#' attr(czek_res,"criterion_value")<-seriation::criterion(stats::dist(scale(x)), order=seriation::ser_permutation(attr(czek_res, "order")),method="Path_length")
-#' attr(czek_res,"Um")<-RMaCzek::Um_factor(stats::dist(scale(x)), order= attr(czek_res, "order"),inverse_um=FALSE)
+#' attr(czek_res,"criterion_value")<-seriation::criterion(stats::dist(scale(x)),
+#' order=seriation::ser_permutation(attr(czek_res, "order")),
+#' method="Path_length")
+#' attr(czek_res,"Um")<-RMaCzek::Um_factor(stats::dist(scale(x)),
+#' order= attr(czek_res, "order"),
+#' inverse_um=FALSE)
 #'
 #' # Czekanowski's Clusterings ############
 #' # Exact Clustering
@@ -95,7 +106,8 @@
 #' attr(czek_exact, "cluster_res") # To get the clustering suggestion.
 #'
 #' # Fuzzy Clustering
-#' czek_fuzzy = czek_matrix(x, order = "OLO", cluster = TRUE, num_cluster = 2, cluster_type = "fuzzy", min.size = 2, scale_bandwidth = 0.2)
+#' czek_fuzzy = czek_matrix(x, order = "OLO", cluster = TRUE, num_cluster = 2,
+#' cluster_type = "fuzzy", min.size = 2, scale_bandwidth = 0.2)
 #' plot(czek_fuzzy)
 #' attr(czek_fuzzy, "cluster_type") # To get the clustering type.
 #' attr(czek_fuzzy, "cluster_res") # To get the clustering suggestion.
