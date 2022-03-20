@@ -44,14 +44,9 @@
 #' czek_matrix(x,n_classes = 3)
 #'
 #' # Change the partition boundaries ############
-#' #10%, 40% and 50%
-#' czek_matrix(x,interval_breaks = c(0.1,0.4,0.5))
-#'
-#' #[0,1] (1,4] (4,6] (6,8.48]
-#' czek_matrix(x,interval_breaks = c(0,1,4,6,8.48))
-#'
-#' #[0,1.7] (1.7,3.39]  (3.39,5.09] (5.09,6.78] (6.78,8.48]
-#' czek_matrix(x,interval_breaks = "equal_width_between_classes")
+#' czek_matrix(x,interval_breaks = c(0.1,0.4,0.5)) #10%, 40% and 50%
+#' czek_matrix(x,interval_breaks = c(0,1,4,6,8.48)) #[0,1] (1,4] (4,6] (6,8.48]
+#' czek_matrix(x,interval_breaks = "equal_width_between_classes") #[0,1.7] (1.7,3.39]  (3.39,5.09] (5.09,6.78] (6.78,8.48]
 #'
 #' # Change number of classes ############
 #' czek_matrix(x,monitor = TRUE)
@@ -84,19 +79,13 @@
 #' attr(czek_res,"order")<-attr(czek_res,"order")[c(1:10,31,11:20,32,21:30)]
 #' # and then correct the values of the different criteria so that they
 #' # are consistent with the new ordering
-#' attr(czek_res,"Path_length")<-seriation::criterion(stats::dist(scale(x)),
-#' order=seriation::ser_permutation(attr(czek_res, "order")),
-#' method="Path_length")
+#' attr(czek_res,"Path_length")<-seriation::criterion(stats::dist(scale(x)), order=seriation::ser_permutation(attr(czek_res, "order")),method="Path_length")
 #' # Here we need to know what criterion was used for the seriation procedure
 #' # If the seriation package was used, then see the manual for seriation::seriate()
 #' # seriation::criterion().
 #' # If the genetic algorithm shipped with RMaCzek was used, then it was the Um factor.
-#' attr(czek_res,"criterion_value")<-seriation::criterion(stats::dist(scale(x)),
-#' order=seriation::ser_permutation(attr(czek_res, "order")),
-#' method="Path_length")
-#' attr(czek_res,"Um")<-RMaCzek::Um_factor(stats::dist(scale(x)),
-#' order= attr(czek_res, "order"),
-#' inverse_um=FALSE)
+#' attr(czek_res,"criterion_value")<-seriation::criterion(stats::dist(scale(x)), order=seriation::ser_permutation(attr(czek_res, "order")),method="Path_length")
+#' attr(czek_res,"Um")<-RMaCzek::Um_factor(stats::dist(scale(x)), order= attr(czek_res, "order"),inverse_um=FALSE)
 #'
 #' # Czekanowski's Clusterings ############
 #' # Exact Clustering
@@ -104,13 +93,14 @@
 #' plot(czek_exact)
 #' attr(czek_exact, "cluster_type") # To get the clustering type.
 #' attr(czek_exact, "cluster_res") # To get the clustering suggestion.
+#' attr(czek_exact, "membership") # To get the membership matrix
 #'
 #' # Fuzzy Clustering
-#' czek_fuzzy = czek_matrix(x, order = "OLO", cluster = TRUE, num_cluster = 2,
-#' cluster_type = "fuzzy", min.size = 2, scale_bandwidth = 0.2)
+#' czek_fuzzy = czek_matrix(x, order = "OLO", cluster = TRUE, num_cluster = 2, cluster_type = "fuzzy", min.size = 2, scale_bandwidth = 0.2)
 #' plot(czek_fuzzy)
 #' attr(czek_fuzzy, "cluster_type") # To get the clustering type.
 #' attr(czek_fuzzy, "cluster_res") # To get the clustering suggestion.
+#' attr(czek_fuzzy, "membership") # To get the membership matrix
 #' # }
 #'
 czek_matrix = function (x, order = "OLO", n_classes = 5, interval_breaks = NULL,
@@ -337,11 +327,15 @@ czek_matrix = function (x, order = "OLO", n_classes = 5, interval_breaks = NULL,
     breakpoints = d$estimates
     cluster_res = d$cluster
 
-    cluster_boundary = matrix(NA,nrow = num_cluster, ncol = 4)
+    cluster_boundary = matrix(NA, nrow = num_cluster, ncol = 4)
+    membership = matrix(0, nrow = n, ncol = num_cluster)
+
     if(cluster_type == "exact"){
       for (i in 1:num_cluster) {
         cluster_boundary[i,] = c(breakpoints[i]-0.5, n-breakpoints[i]+1.5, breakpoints[i+1]-0.5, n-breakpoints[i+1]+1.5)
         cluster_id[[i]] = new_order[breakpoints[i]:(breakpoints[i+1]-1)]
+
+        membership[breakpoints[i]:(breakpoints[i+1]-1), i] = 1
       }
     }else if(cluster_type == "fuzzy"){
       d = e.divisive(as.matrix(res_fuzzy$membership), min.size = min.size, sig.lvl = sig.lvl)
@@ -355,6 +349,7 @@ czek_matrix = function (x, order = "OLO", n_classes = 5, interval_breaks = NULL,
 
         cluster_boundary[i,] = c(min(id, lower)-0.5, n-min(id, lower)+1.5, max(id, upper)-0.5, n-max(id, upper)+1.5)
         cluster_id[[i]] = c(min(id, lower):(max(id, upper)-1))
+        membership[breakpoints[i]:(breakpoints[i+1]-1), i] = 1
       }
 
       temp = unlist(cluster_id)
@@ -366,16 +361,22 @@ czek_matrix = function (x, order = "OLO", n_classes = 5, interval_breaks = NULL,
         prob[foo] = res_fuzzy$membership[i,foo]
         prob = prob/sum(prob)
         cluster_res[i] = sample(1:num_cluster, 1, prob = prob)
+
+        membership[i,] = prob
       }
     }else{
       stop("Wrong cluster method.")
     }
+
+    names(cluster_res) = rownames(x)[new_order]
+    rownames(membership) = rownames(x)[new_order]
 
     attr(czek_matrix, "cluster") <- TRUE
     attr(czek_matrix, "num_cluster") <- num_cluster
     attr(czek_matrix, "cluster_res") <- cluster_res[order(new_order)]
     attr(czek_matrix, "cluster_type") <- cluster_type
     attr(czek_matrix, "cluster_boundary") <- cluster_boundary
+    attr(czek_matrix, "membership") <- membership[order(new_order),]
   }
 
   if ((!as_dist) && (!original_diagram)) {

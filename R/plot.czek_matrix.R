@@ -19,10 +19,9 @@
 #'# Not Cluster
 #'czek = czek_matrix(mtcars)
 #'# Exact Clustering
-#'czek_exact = czek_matrix(iris[,-5], order = "GW", cluster = TRUE, num_cluster = 2, min.size = 2)
+#'czek_exact = czek_matrix(x, order = "GW", cluster = TRUE, num_cluster = 2, min.size = 2)
 #'# Fuzzy Clustering
-#'czek_fuzzy = czek_matrix(iris[,-5], order = "OLO", cluster = TRUE,
-#'num_cluster = 2, cluster_type = "fuzzy", min.size = 2, scale_bandwidth = 0.2)
+#'czek_fuzzy = czek_matrix(x, order = "OLO", cluster = TRUE, num_cluster = 2, cluster_type = "fuzzy", min.size = 2, scale_bandwidth = 0.2)
 #'
 #'# Standard plot ############
 #'plot(czek_exact)
