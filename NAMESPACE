@@ -17,7 +17,6 @@ export(czek_matrix, manual_reorder, plot.czek_matrix, print.czek_matrix, print.c
 importFrom(GA, ga, gaControl)
 importFrom(graphics, axis, barplot, box, legend, par, plot)
 importFrom(methods, as, is)
-# importFrom(seriation, criterion, get_order, seriate, show_seriation_methods)
 importFrom(seriation, criterion, get_order, seriate)
 importFrom(stats, as.dist, dist, ecdf, quantile)
 importFrom(e1071, cmeans)
