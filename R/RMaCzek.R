@@ -7,7 +7,7 @@
 #'
 #' @section The packages functions:
 #' \describe{
-#'   \item{czek_matrix}{A function that returns a distance matrix where the distances are divided into classes. It also offers exact and fuzzy Czekanowski's clustering algorithm. The return from the function is expected to be passed into the plot function. }
+#'   \item{czek_matrix}{A function that returns a distance matrix where the distances are divided into classes. It also offers exact and fuzzy Czekanowski's clustering algorithm. The return from the function is expected to be passed into the plot function.}
 #'   \item{plot.czek_matrix}{A function that returns Czekanowski's Diagram.}
 #' }
 #'
