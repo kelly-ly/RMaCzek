@@ -15,5 +15,5 @@
 #'
 #' @name RMaCzek
 #' @docType package
-#' @author Albin Vasterlund, Ying Luo
+#' @author Albin Vasterlund, Krzysztof Bartoszek, Ying Luo
 NULL
