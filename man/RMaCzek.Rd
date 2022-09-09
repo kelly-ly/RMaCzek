@@ -16,5 +16,5 @@ This package produces Czekanowski's diagram
 }
 
 \author{
-Albin Vasterlund, Ying Luo
+Albin Vasterlund, Krzysztof Bartoszek, Ying Luo
 }
