@@ -19,7 +19,7 @@
 #' plot(czek_matrix(dist_data))
 #'
 cluster_dist = function(x, y, distfun = dist, dist_method = "average"){
-  if(class(x) == "czek_matrix"){
+  if(inherits(x,"czek_matrix")){
     if(is.null(attr(x, "cluster"))){
       stop("Please try a clustered czek_matrix.")
     }
@@ -33,7 +33,7 @@ cluster_dist = function(x, y, distfun = dist, dist_method = "average"){
       clusters[[i]] = which(y == i)
     }
     names = paste("cluster", 1:num_cluster)
-  }else if(class(x) == "matrix" | class(x) == "data.frame"){
+  }else if(inherits(x,"matrix") | inherits(x,"data.frame")){
     if(nrow(x) != length(y)){
       stop("The lengths of x and y do not match.")
     }
