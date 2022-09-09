@@ -72,7 +72,6 @@ The function returns a matrix with class czek_matrix. The return from the functi
 Preprocess the data to generate a matrix of category czek_matrix for generating Czekanowski's Diagram. This method also offers exact and fuzzy Czekanowski's clustering algorithm.
 }
 \examples{
-# NOT RUN {
 # Set data ####
 x<-mtcars
 
@@ -82,8 +81,6 @@ czek_matrix(stats::dist(scale(x)))
 
 ## below a number of other options are shown
 ## but they take too long to run
-# }
-# NOT RUN {
 # Change seriation method ############
 #seriation::show_seriation_methods("dist")
 czek_matrix(x,order = "GW")
@@ -156,6 +153,7 @@ attr(czek_exact, "cluster_type") # To get the clustering type.
 attr(czek_exact, "cluster_res") # To get the clustering suggestion.
 attr(czek_exact, "membership") # To get the membership matrix
 
+\dontrun{
 # Fuzzy Clustering
 czek_fuzzy = czek_matrix(x, order = "OLO", cluster = TRUE, num_cluster = 2,
 cluster_type = "fuzzy", min.size = 2, scale_bandwidth = 0.2)
@@ -163,6 +161,6 @@ plot(czek_fuzzy)
 attr(czek_fuzzy, "cluster_type") # To get the clustering type.
 attr(czek_fuzzy, "cluster_res") # To get the clustering suggestion.
 attr(czek_fuzzy, "membership") # To get the membership matrix
-# }
+}
 
 }
