@@ -22,7 +22,6 @@
 #' @return The function returns a matrix with class czek_matrix. The return from the function is expected to be passed to the plot function. If as_dist is passed as TRUE, then a czek_matrix object is returned and this is not suitable for the plotting. As an attribute of the output the optimized criterion value is returned. However, this is a guess based on seriation::seriate()'s and seriation::criterion()'s manuals. If something else was optimized, e.g. due to user's parameters, then this will be wrong. If unable to guess, then NA saved in the attribute.
 #' @export
 #' @examples
-#' # NOT RUN {
 #' # Set data ####
 #' x<-mtcars
 #'
@@ -32,8 +31,6 @@
 #'
 #' ## below a number of other options are shown
 #' ## but they take too long to run
-#' # }
-#' # NOT RUN {
 #' # Change seriation method ############
 #' #seriation::show_seriation_methods("dist")
 #' czek_matrix(x,order = "GW")
@@ -106,6 +103,7 @@
 #' attr(czek_exact, "cluster_res") # To get the clustering suggestion.
 #' attr(czek_exact, "membership") # To get the membership matrix
 #'
+#' \dontrun{
 #' # Fuzzy Clustering
 #' czek_fuzzy = czek_matrix(x, order = "OLO", cluster = TRUE, num_cluster = 2,
 #' cluster_type = "fuzzy", min.size = 2, scale_bandwidth = 0.2)
@@ -113,7 +111,7 @@
 #' attr(czek_fuzzy, "cluster_type") # To get the clustering type.
 #' attr(czek_fuzzy, "cluster_res") # To get the clustering suggestion.
 #' attr(czek_fuzzy, "membership") # To get the membership matrix
-#' # }
+#' }
 #'
 czek_matrix = function (x, order = "OLO", n_classes = 5, interval_breaks = NULL,
                         monitor = FALSE, distfun = dist, scale_data = TRUE, focal_obj = NULL,
